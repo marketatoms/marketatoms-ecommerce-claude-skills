@@ -142,8 +142,8 @@ in as well.
 ### C. Claude Code - the full library
 
 ```bash
-git clone https://github.com/marketatoms/ecommerce-claude-skills.git
-cd ecommerce-claude-skills
+git clone https://github.com/marketatoms/marketatoms-ecommerce-claude-skills.git
+cd marketatoms-ecommerce-claude-skills
 python3 scripts/build_zips.py
 mkdir -p ~/.claude/skills
 cp -R dist/skill-folders/. ~/.claude/skills/
