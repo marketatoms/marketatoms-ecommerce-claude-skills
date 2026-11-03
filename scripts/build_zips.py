@@ -5,8 +5,10 @@
                                 its own references/, the scripts it needs, and
                                 AGENTS.md for the reporting skills). This is
                                 what Claude Code installs.
-- dist/<folder>.zip             one ZIP per category folder (8). Inside: one
-                                upload-ready ZIP per skill, for the Claude app.
+- dist/skills/<skill>.zip       one ZIP per skill (40), holding exactly that
+                                skill folder: upload it to the Claude app as is.
+- dist/<folder>.zip             one ZIP per category folder (8): the same five
+                                skill ZIPs, for downloading a whole folder.
 - dist/ecommerce-claude-skills-<version>.zip
                                 the whole library in repository layout.
 
@@ -59,6 +61,7 @@ def main() -> None:
     if DIST.exists():
         shutil.rmtree(DIST)
     (DIST / "skill-folders").mkdir(parents=True)
+    (DIST / "skills").mkdir()
     categories = sorted(p for p in ROOT.glob("[0-9][0-9]-*") if p.is_dir())
     total = 0
     for cat in categories:
@@ -71,7 +74,9 @@ def main() -> None:
                        "(Settings > Capabilities > Skills). Upload them one by one.\n")
             for folder in skills:
                 files = skill_files(folder)
-                z.writestr(f"{cat.name}/{folder.name}.zip", skill_zip_bytes(folder.name, files))
+                data = skill_zip_bytes(folder.name, files)
+                z.writestr(f"{cat.name}/{folder.name}.zip", data)
+                (DIST / "skills" / f"{folder.name}.zip").write_bytes(data)
                 target = DIST / "skill-folders" / folder.name
                 for arc, src in files.items():
                     (target / arc).parent.mkdir(parents=True, exist_ok=True)
@@ -86,6 +91,7 @@ def main() -> None:
             if path.is_file() and not (set(rel.parts) & SKIP) and path.suffix != ".pyc":
                 z.write(path, f"ecommerce-claude-skills/{rel}")
     print(f"{full.relative_to(ROOT)}  (whole library)")
+    print(f"dist/skills/  ({total} single-skill ZIPs for the Claude app)")
     print(f"dist/skill-folders/  ({total} self-contained skill folders for Claude Code)")
 
 

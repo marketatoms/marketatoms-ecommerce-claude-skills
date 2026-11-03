@@ -45,8 +45,9 @@ find revenue leaks in a Shopify store.
   sample store
 - `validate_skills.py`: checks the 8 x 5 layout, the new-skill rules,
   threshold tags and usage, and the launch-post values; `selftest.py`: 20 new
-  checks; `build_zips.py`: one ZIP per folder, one full ZIP and
-  self-contained skill folders for Claude Code
+  checks; `build_zips.py`: one ZIP per skill (upload to the Claude app as
+  is), one ZIP per folder, one full ZIP and self-contained skill folders for
+  Claude Code
 
 ### Carried over
 

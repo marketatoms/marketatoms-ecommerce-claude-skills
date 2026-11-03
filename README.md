@@ -33,7 +33,7 @@ client stores. *Find the leak. Fix the system. Scale what works.*
 | # | Skill | The question it answers |
 |---|---|---|
 | 6 | [`feed-zero-impressions-leak`](02-google-shopping/feed-zero-impressions-leak/SKILL.md) | Which approved, in-stock products got zero impressions for 14 days? |
-| 7 | [`product-disapproval-leak`](02-google-shopping/product-disapproval-leak/SKILL.md) | Which products has Merchant Center disapproved, and what do they normally sell? |
+| 7 | [`product-disapproval-leak`](02-google-shopping/product-disapproval-leak/SKILL.md) | Which products have been disapproved by Merchant Center, and what do they normally sell? |
 | 8 | [`shopping-product-roas-leak`](02-google-shopping/shopping-product-roas-leak/SKILL.md) | Which Shopping products return less than half the target ROAS? |
 | 9 | [`branded-search-share-leak`](02-google-shopping/branded-search-share-leak/SKILL.md) | How much of Google's ROAS comes from people already searching for the store? |
 | 10 | [`price-competitiveness-leak`](02-google-shopping/price-competitiveness-leak/SKILL.md) | Which products are priced well above what other sellers charge on Google? |
@@ -98,18 +98,29 @@ client stores. *Find the leak. Fix the system. Scale what works.*
 | 39 | [`channel-performance-scorecard`](08-reporting/channel-performance-scorecard/SKILL.md) | Which channel works, judged on Shopify's numbers? |
 | 40 | [`leak-fix-tracker`](08-reporting/leak-fix-tracker/SKILL.md) | Did the fix actually work? |
 
-Skills 1-2, 11, 16-18, 21-22, 26, 31-32 and 36 come unchanged from
-[shopify-revenue-leak-skills](https://github.com/marketatoms/shopify-revenue-leak-skills).
+### Carried over from shopify-revenue-leak-skills
+
+These 12 come unchanged from
+[shopify-revenue-leak-skills](https://github.com/marketatoms/shopify-revenue-leak-skills)
+(only their relative paths were adjusted for the folder layout):
+
+`wasted-ad-spend-leak`, `stockout-ad-spend-leak`, `tracking-gap-leak`,
+`checkout-drop-leak`, `mobile-conversion-gap-leak`,
+`product-page-conversion-leak`, `basket-value-gap-leak`, `discount-leak`,
+`second-order-gap-leak`, `contribution-margin-leak`,
+`refund-and-return-leak` and `weekly-revenue-leak-readout`.
+
+The other 28 are new in this library.
 
 ## Where to start
 
-1. Run the **03-tracking** checks first, starting with **`tracking-gap-leak`**.
-   If the numbers are wrong, every decision built on them is wrong too.
+1. Run the **03-tracking** checks first, starting with **`tracking-gap-leak`**:
+   if the numbers are wrong, every decision built on them is wrong too.
 2. Then the folder for your biggest worry: ads, Google Shopping, conversion,
    basket, retention or profit.
-3. Every morning **`daily-revenue-pulse`**; every Monday
-   **`weekly-revenue-leak-readout`**; at month end
-   **`monthly-revenue-leak-review`**.
+3. Run **`daily-revenue-pulse`** every morning,
+   **`weekly-revenue-leak-readout`** every Monday and
+   **`monthly-revenue-leak-review`** at month end.
 
 The full order and the rules for how the skills depend on each other are in
 [`AGENTS.md`](AGENTS.md).
@@ -126,18 +137,23 @@ The skills point to `references/thresholds.md` for their numbers. If you only
 paste one skill, paste [`references/thresholds.md`](references/thresholds.md)
 in as well.
 
-### B. Add skills to the Claude app - one ZIP per folder
+### B. Add a skill to the Claude app - one ZIP per skill
 
-1. Download a folder's ZIP (for example `03-tracking.zip`) from the
-   **Releases** page of this repository, or build them yourself with
-   `python3 scripts/build_zips.py` (creates `dist/`).
-2. Unzip it. Inside are five ZIPs, one per skill, each already containing the
-   thresholds file and any script it needs.
-3. In Claude, open **Settings**, find **Skills** (under capabilities), and
-   upload the skill ZIPs you want, one by one. Skills availability depends on
-   your Claude plan and on whether your workspace admin has enabled them.
-4. Start a new chat and ask, for example: *"Check my Google Shopping feed for
+Download the skill's ZIP and upload it. No unzipping.
+
+1. On the **Releases** page of this repository, download the ZIP named after
+   the skill (for example `feed-zero-impressions-leak.zip`). Each one holds
+   exactly one skill folder, with its own thresholds file and any script it
+   needs.
+2. In Claude, open **Settings** > **Skills** and upload the ZIP. Skills
+   availability depends on your Claude plan and on whether your workspace
+   admin has enabled them.
+3. Start a new chat and ask, for example: *"Check my Google Shopping feed for
    products with no impressions"* and attach the export.
+
+Want a whole area at once? The folder ZIPs (`01-meta-ads.zip` to
+`08-reporting.zip`) bundle the same five skill ZIPs for one folder. To build
+everything yourself: `python3 scripts/build_zips.py` (creates `dist/`).
 
 ### C. Claude Code - the full library
 
@@ -161,11 +177,12 @@ whole repository, for reading or for building your own selection.
 
 ## Live data with the MarketAtoms MCP
 
-Every skill works from exports. If you connect the **MarketAtoms MCP** to
-Claude, skills that have a live tool (store totals, Meta campaigns, Meta wasted
-spend) read your Shopify and Meta data directly instead, so the same checks can
-run every morning without downloading anything. Google, GA4, Merchant Center
-and email-tool checks still use exports.
+The skills never change anything. With the MarketAtoms MCP connected, they
+read live Shopify and Meta data instead of exports.
+
+That covers the skills with a live tool (store totals, Meta campaigns, Meta
+wasted spend), so the same checks can run every morning without downloading
+anything. Google, GA4, Merchant Center and email-tool checks still use exports.
 
 The connector is in a private pilot with a small number of stores. To join,
 email **support@marketatoms.com** with the subject "Engine pilot", or book a
